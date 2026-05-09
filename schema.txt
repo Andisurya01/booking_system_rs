@@ -1,0 +1,490 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────────────────────
+
+export enum Gender {
+  male = 'male',
+  female = 'female',
+}
+
+export enum StatusSchedule {
+  active = 'active',
+  inactive = 'inactive',
+  pending_change = 'pending_change',
+}
+
+export enum StatusRegistration {
+  registered = 'registered',
+  cancelled = 'cancelled',
+  rescheduled = 'rescheduled',
+  no_show = 'no_show',
+  completed = 'completed',
+}
+
+export enum RoomType {
+  polyclinic = 'polyclinic',
+  examination = 'examination',
+  consultation = 'consultation',
+}
+
+export enum PatientType {
+  general = 'general',
+  insurance = 'insurance',
+}
+
+export enum BloodType {
+  A = 'A',
+  B = 'B',
+  AB = 'AB',
+  O = 'O',
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Base domain interfaces (full DB shape)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface Role {
+  id: number
+  uuid: string
+  name: string
+  description: string
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface UserRole {
+  id: number
+  user_id: number
+  role_id: number
+}
+
+export interface User {
+  id: number
+  uuid: string
+  name: string
+  email: string
+  password: string
+  verified: boolean
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface Member {
+  id: number
+  uuid: string
+  no_kk: string
+  url_image_kk: string | null
+  user_id: number
+  patient_id: number
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface Patient {
+  id: number
+  uuid: string
+  user_id: number
+  medical_record_number: string
+  name: string
+  nik: string
+  url_image_nik: string | null
+  birth_date: Date
+  gender: Gender
+  blood_type: BloodType | null
+  phone_number: string
+  address: string | null
+  city: string | null
+  postal_code: string | null
+  emergency_contact_name: string | null
+  emergency_contact_phone: string | null
+  known_allergies: string | null
+  chronic_conditions: string | null
+  verified: boolean
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface Insurance {
+  id: number
+  uuid: string
+  name: string
+  code: string
+  description: string | null
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface PatientInsurance {
+  id: number
+  uuid: string
+  patient_id: number
+  insurance_id: number
+  policy_number: string
+  valid_from: Date
+  valid_until: Date
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface Specialization {
+  id: number
+  uuid: string
+  name: string
+  description: string
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface DoctorSpecialization {
+  id: number
+  uuid: string
+  doctor_id: number
+  specialization_id: number
+  license_number_sip: string
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface Doctor {
+  id: number
+  uuid: string
+  user_id: number
+  initial_name: string
+  bio: string | null
+  url_image_profile: string | null
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface DoctorScheduleTemplate {
+  id: number
+  uuid: string
+  doctor_id: number
+  day_of_week: number
+  start_time: string
+  end_time: string
+  default_capacity_general: number
+  default_capacity_insurance: number
+  valid_from: Date
+  valid_until: Date | null
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface DoctorSchedule {
+  id: number
+  uuid: string
+  doctor_id: number
+  room_id: number | null
+  schedule_date: Date
+  start_time: string
+  end_time: string
+  capacity_general: number
+  capacity_insurance: number
+  status: StatusSchedule
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface Location {
+  id: number
+  uuid: string
+  name: string
+  description: string | null
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+	
+
+export interface Room {
+  id: number
+  uuid: string
+  location_id: number
+  room_code: string
+  room_type: RoomType
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+export interface Registration {
+  id: number
+  uuid: string
+  patient_id: number
+  user_id: number
+  schedule_id: number
+  insurance_id: number | null
+  patient_type: PatientType
+  queue_general: number | null
+  queue_insurance: number | null
+  status: StatusRegistration
+  notes: string | null
+  is_rescheduled: boolean
+  rescheduled_from: number | null
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Safe types (tanpa field sensitif)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type SafeUser = Omit<User, 'password'>
+
+export type SafePatient = Omit<Patient, 'nik' | 'url_image_nik'>
+
+// ─────────────────────────────────────────────────────────────────────────────
+// With relations (untuk response yang include relasi)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface UserWithRoles extends SafeUser {
+  roles: (UserRole & { role: Role })[]
+}
+
+export interface PatientWithInsurances extends Patient {
+  insurances: (PatientInsurance & { insurance: Insurance })[]
+}
+
+export interface DoctorWithSpecializations extends Doctor {
+  user: SafeUser
+  specializations: (DoctorSpecialization & { specialization: Specialization })[]
+}
+
+export interface DoctorScheduleWithRelations extends DoctorSchedule {
+  doctor: Doctor & { user: Pick<User, 'id' | 'name'> }
+  room: Room | null
+}
+
+export interface RegistrationWithRelations extends Registration {
+  patient: Pick<Patient, 'id' | 'uuid' | 'name' | 'medical_record_number'>
+  schedule: DoctorScheduleWithRelations
+  insurance: PatientInsurance | null
+  user: Pick<User, 'id' | 'name'>
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DTO — Create
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface CreateUserDTO {
+  name: string
+  email: string
+  password: string
+}
+
+export interface CreatePatientDTO {
+  user_id: number
+  medical_record_number: string
+  name: string
+  nik: string
+  url_image_nik?: string
+  birth_date: Date
+  gender: Gender
+  blood_type?: BloodType
+  phone_number: string
+  address?: string
+  city?: string
+  postal_code?: string
+  emergency_contact_name?: string
+  emergency_contact_phone?: string
+  known_allergies?: string
+  chronic_conditions?: string
+}
+
+export interface CreateDoctorDTO {
+  user_id: number
+  initial_name: string
+  bio?: string
+  url_image_profile?: string
+}
+
+export interface CreateDoctorScheduleTemplateDTO {
+  doctor_id: number
+  day_of_week: number       // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
+  start_time: string        // format HH:MM
+  end_time: string
+  default_capacity_general: number
+  default_capacity_insurance: number
+  valid_from: Date
+  valid_until?: Date
+}
+
+export interface CreateDoctorScheduleDTO {
+  doctor_id: number
+  room_id?: number
+  schedule_date: Date
+  start_time: string
+  end_time: string
+  capacity_general: number
+  capacity_insurance: number
+}
+
+export interface CreateRegistrationDTO {
+  patient_id: number
+  user_id: number
+  schedule_id: number
+  insurance_id?: number
+  patient_type: PatientType
+  notes?: string
+}
+
+export interface CreatePatientInsuranceDTO {
+  patient_id: number
+  insurance_id: number
+  policy_number: string
+  valid_from: Date
+  valid_until: Date
+}
+
+export interface CreateMemberDTO {
+  no_kk: string
+  url_image_kk?: string
+  user_id: number
+  patient_id: number
+}
+
+export interface CreateRoomDTO {
+  location_id: number
+  room_code: string
+  room_type: RoomType
+}
+
+export interface CreateInsuranceDTO {
+  name: string
+  code: string
+  description?: string
+}
+
+export interface CreateSpecializationDTO {
+  name: string
+  description: string
+}
+
+export interface AssignDoctorSpecializationDTO {
+  doctor_id: number
+  specialization_id: number
+  license_number_sip: string
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DTO — Update (semua field optional kecuali tidak bisa diubah)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface UpdateUserDTO {
+  name?: string
+  email?: string
+  password?: string
+  verified?: boolean
+  is_active?: boolean
+}
+
+export interface UpdatePatientDTO {
+  name?: string
+  url_image_nik?: string
+  birth_date?: Date
+  gender?: Gender
+  blood_type?: BloodType
+  phone_number?: string
+  address?: string
+  city?: string
+  postal_code?: string
+  emergency_contact_name?: string
+  emergency_contact_phone?: string
+  known_allergies?: string
+  chronic_conditions?: string
+  verified?: boolean
+  is_active?: boolean
+}
+
+export interface UpdateDoctorDTO {
+  initial_name?: string
+  bio?: string
+  url_image_profile?: string
+  is_active?: boolean
+}
+
+export interface UpdateDoctorScheduleDTO {
+  room_id?: number | null
+  start_time?: string
+  end_time?: string
+  capacity_general?: number
+  capacity_insurance?: number
+  status?: StatusSchedule
+  is_active?: boolean
+}
+
+export interface UpdateRegistrationStatusDTO {
+  status: StatusRegistration
+  notes?: string
+}
+
+export interface RescheduleRegistrationDTO {
+  new_schedule_id: number
+  notes?: string
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Query / Filter params
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface PaginationQuery {
+  page?: number
+  limit?: number
+}
+
+export interface DoctorScheduleFilterQuery extends PaginationQuery {
+  doctor_id?: number
+  schedule_date?: Date
+  status?: StatusSchedule
+}
+
+export interface RegistrationFilterQuery extends PaginationQuery {
+  patient_id?: number
+  doctor_id?: number
+  schedule_date?: Date
+  status?: StatusRegistration
+  patient_type?: PatientType
+}
+
+export interface PatientFilterQuery extends PaginationQuery {
+  search?: string       // name / nik / medical_record_number
+  verified?: boolean
+  is_active?: boolean
+}
+export interface Room {
+  id: number
+  uuid: string
+  location_id: number
+  room_code: string
+  room_type: RoomType
+  is_active: boolean
+  created_at: Date
+  deleted_at: Date | null
+  updated_at: Date | null
+}
