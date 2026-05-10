@@ -15,18 +15,21 @@ import {
 
 import { Button } from "@/components/ui/button"
 
-import { Schedule } from "../schema/registration.schema"
+import { Schedule } from "@/types/schedule"
+import { DoctorDetail } from "@/types/doctor"
 
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
   schedule: Schedule
+  doctor: DoctorDetail
 }
 
 export function RegistrationSuccessDialog({
   open,
   onOpenChange,
   schedule,
+  doctor
 }: Props) {
   return (
     <Dialog
@@ -51,7 +54,7 @@ export function RegistrationSuccessDialog({
 
           <div className="mt-10 w-full rounded-3xl bg-[#F3FAEF] p-8">
             <h2 className="text-4xl font-semibold">
-              {schedule.doctor?.name}
+              {doctor.user.name}
             </h2>
 
             <div className="mt-10 grid grid-cols-2 gap-10">

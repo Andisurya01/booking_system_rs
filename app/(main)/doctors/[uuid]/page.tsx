@@ -2,12 +2,15 @@
 
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronRight, Loader2 } from 'lucide-react'
+import { ArrowRight, ChevronRight, Loader2 } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import DoctorProfileCard from '@/modules/doctors/components/DoctorProfileCard'
 import SchedulePanel from '@/modules/doctors/components/SchedulePanel'
 import { useDoctorDetail } from '@/modules/doctors/hook/useDoctor'
+import { Calendar } from '@/components/ui/calendar'
+import DatePicker from '@/modules/doctors/components/DatePicker'
+import { Button } from '@/components/ui/button'
 
 export default function DoctorDetailPage() {
     const params = useParams<{ uuid: string }>()
@@ -31,7 +34,7 @@ export default function DoctorDetailPage() {
             <>
                 <div className="min-h-screen flex flex-col items-center justify-center gap-3 text-gray-500">
                     <p className="text-lg">Dokter tidak ditemukan.</p>
-                    <p>{data?.data.initial_name == undefined ? "tes": doctor?.initial_name}</p>
+                    <p>{data?.data.initial_name == undefined ? "tes" : doctor?.initial_name}</p>
                     <Link href="/doctors" className="text-green-600 hover:underline text-sm">
                         Kembali ke daftar dokter
                     </Link>
@@ -68,7 +71,8 @@ export default function DoctorDetailPage() {
                     </div>
 
                     <div className="lg:sticky lg:top-20">
-                        <SchedulePanel doctorUuid={params.uuid} />
+                        <DatePicker></DatePicker>
+                        {/* <SchedulePanel doctorUuid={params.uuid} /> */}
                     </div>
                 </div>
             </main>

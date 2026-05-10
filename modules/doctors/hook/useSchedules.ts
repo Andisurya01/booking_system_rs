@@ -12,6 +12,21 @@ export const useSchedules = (params: ScheduleQueryParams) => {
   })
 }
 
+export const useSchedulesByDoctorUuid = (uuid: string) => {
+  return useQuery({
+    queryKey: ['schedules_doctor', uuid],
+    queryFn: () => scheduleService.getScheduleByDocterUuid(uuid)
+  })
+}
+
+export const useSchedulesByUuid = (uuid: string) => {
+  return useQuery({
+    queryKey: ['schedule', uuid],
+    queryFn: () => scheduleService.getSCheduleByUuid(uuid)
+  })
+} 
+
+
 export const useSpecializations = () => {
   return useQuery({
     queryKey: ['specializations'],

@@ -1,32 +1,25 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { BadgeCheck, Share2 } from 'lucide-react'
 import { DoctorDetail } from '@/types/doctor'
+import { Badge } from '@/components/ui/badge'
 
 interface Props {
     doctor: DoctorDetail
 }
 
-const getInitials = (name: string) =>
-    name.split(' ').filter(Boolean).slice(0, 2).map((n) => n[0]).join('').toUpperCase()
-
 export default function DoctorProfileCard({ doctor }: Props) {
-    const primarySpec =
-        doctor.specializations?.[1]?.specialization?.name ??
-        'Dokter Umum'
     const handleShare = () => {
-        navigator.share?.({ title: doctor.initial_name, url: window.location.href })
-            ?? navigator.clipboard.writeText(window.location.href)
     }
 
     return (
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <div className="flex items-start gap-5">
                 {/* Avatar */}
-                <div className="relative flex-shrink-0">
+                <div className="relative">
                     <Avatar className="w-28 h-28 rounded-2xl">
                         <AvatarImage src={doctor.url_image_profile ?? undefined} className="object-cover" />
-                        <AvatarFallback className="bg-teal-100 text-teal-700 text-2xl font-bold rounded-2xl">
-                            {getInitials(doctor.user.name)}
+                        <AvatarFallback className=" text-teal-700 text-2xl font-bold rounded-2xl">
+                            {doctor.initial_name}
                         </AvatarFallback>
                     </Avatar>
                     {/* Verified badge */}
@@ -39,8 +32,17 @@ export default function DoctorProfileCard({ doctor }: Props) {
                 <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">{doctor.initial_name}</h1>
-                            <p className="text-green-600 font-medium mt-0.5">{primarySpec}</p>
+                            <h1 className="text-2xl font-bold text-gray-900">{doctor.user.name}</h1>
+                            <div className="text-green-600 font-medium mt-0.5">
+                                {doctor.specializations.map((item) => (
+
+                                    <div key={item.specialization.uuid}>
+                                        <Badge className='bg-gray-100 text-gray-700'>
+                                            {item.specialization.name}
+                                        </Badge>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                         <button
                             onClick={handleShare}

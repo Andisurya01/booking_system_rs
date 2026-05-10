@@ -29,7 +29,7 @@ export function NotesField({
         <Textarea
           rows={5}
           placeholder="Tuliskan keluhan atau riwayat kesehatan..."
-          {...form.register("notes")}
+          {...form.register("note")}
         />
       </FieldContent>
     </Field>

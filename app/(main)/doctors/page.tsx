@@ -8,24 +8,25 @@ import SpecializationFilter from '@/modules/doctors/components/SpecializationFil
 import { ScheduleQueryParams } from '@/types/schedule'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
+import { useDoctors } from '@/modules/doctors/hook/useDoctor'
+import { DoctorQueryParams } from '@/types/doctor'
 
 const LIMIT = 9
 
 export default function CariDokterPage() {
-    const [params, setParams] = useState<ScheduleQueryParams>({
+    const [params, setParams] = useState<DoctorQueryParams>({
         page: 1,
         limit: LIMIT,
-        status: 'active',
     })
 
-    const { data, isLoading, isFetching } = useSchedules(params)
+    const { data, isLoading, isFetching } = useDoctors(params)
     const { data: specData } = useSpecializations()
 
     const schedules = data?.data ?? []
     const meta = data?.meta
     const specializations = specData?.data ?? []
 
-    const updateParams = (newParams: Partial<ScheduleQueryParams>) => {
+    const updateParams = (newParams: Partial<DoctorQueryParams>) => {
         setParams((prev) => ({ ...prev, ...newParams, page: 1 }))
     }
 
@@ -62,8 +63,8 @@ export default function CariDokterPage() {
                 ) : (
                     <>
                         <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity ${isFetching ? 'opacity-60' : 'opacity-100'}`}>
-                            {schedules.map((schedule) => (
-                                <DoctorCard key={schedule.uuid} schedule={schedule} />
+                            {schedules.map((doctor) => (
+                                <DoctorCard key={doctor.uuid} doctor={doctor} />
                             ))}
                         </div>
 

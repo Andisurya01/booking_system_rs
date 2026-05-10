@@ -19,6 +19,29 @@ export interface ScheduleResponse {
   }
 }
 
+export interface Schedule {
+  id: number,
+  uuid: string,
+  doctor_id: number,
+  room_id: number,
+  schedule_date : string,
+  start_time : string, 
+  end_time : string,
+  capacity_general : number,
+  capacity_insurance : number,
+  status : string,
+  room: {
+    uuid : string,
+    room_code : string,
+    room_type  : string,
+    location: {
+      uuid : string,
+      name : string,
+      description : string,
+    }
+  }
+}
+
 export interface DoctorScheduleWithRelations {
   id: number
   uuid: string

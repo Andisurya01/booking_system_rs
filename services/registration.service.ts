@@ -1,20 +1,17 @@
 import api from '@/lib/axios'
-
-interface CreateRegistrationPayload {
-  schedule_id: number
-  patient_type: "general" | "insurance"
-  notes?: string
-  insurance_id?: number | null
-}
+import { CreateRegistrationPayload } from '@/types/myRegistration'
 
 export const registrationService = {
   create: async (
     payload: CreateRegistrationPayload,
   ) => {
+    console.log("apa sih ini",payload);
+    
     const response = await api.post(
       "/registrations",
       payload,
     )
+    console.log("ini response ini", response);
 
     return response.data
   },

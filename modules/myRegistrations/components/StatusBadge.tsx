@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils/utils'
 import { StatusRegistration } from '@/types/myRegistration'
 
 const STATUS_CONFIG: Record<StatusRegistration, { label: string; className: string }> = {

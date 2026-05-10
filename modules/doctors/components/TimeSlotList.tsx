@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils/utils'
 import { DoctorScheduleSlot } from '@/types/doctor'
 
 interface Props {

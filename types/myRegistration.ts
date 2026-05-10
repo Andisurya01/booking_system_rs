@@ -18,14 +18,21 @@ export enum PatientType {
   insurance = 'insurance',
 }
 
+export interface RegistrationSummary {
+  active_count: number
+  total_count: number
+  upcoming: RegistrationItem[]
+}
+
 
 export interface RegistrationItem {
   uuid: string
   patient_type: PatientType
   queue_general: number | null
   queue_insurance: number | null
+  code_queue: string
   status: StatusRegistration
-  notes: string | null
+  note: string | null
   is_rescheduled: boolean
   rescheduled_from: number | null
   created_at: string
@@ -47,7 +54,6 @@ export interface RegistrationItem {
       location: { name: string }
     } | null
   }
-  // hanya ada jika is_rescheduled = true
   previous_schedule?: {
     schedule_date: string
     start_time: string
@@ -55,7 +61,24 @@ export interface RegistrationItem {
   }
 }
 
-export interface RegistrationFilterQuery {
+export interface CreateRegistrationPayload {
+  patient_id: number
+  schedule_id: number
+  patient_type: "general" | "insurance"
+  note?: string
+}
+
+export interface RegistrationResponse {
+  data: RegistrationItem[]
+  meta: {
+    total: number
+    page: number
+    limit: number
+    total_pages: number
+  }
+}
+
+export interface RegistrationQueryParams {
   search?: string
   status?: StatusRegistration
   page?: number

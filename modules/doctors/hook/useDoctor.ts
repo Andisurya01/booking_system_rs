@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { doctorService } from '@/services/doctor.service'
-import { DoctorScheduleSlot, ScheduleByDate } from '@/types/doctor'
+import { DoctorQueryParams, DoctorScheduleSlot, ScheduleByDate } from '@/types/doctor'
 
 export const useDoctorDetail = (uuid: string) => {
   return useQuery({
@@ -10,13 +10,26 @@ export const useDoctorDetail = (uuid: string) => {
   })
 }
 
+export const useDoctors = (params: DoctorQueryParams) => {
+  return useQuery({
+    queryKey: ['doctors', params],
+    queryFn: async () => {
+      const response = await doctorService.getDoctors(params)
+      console.log("testing",response);
+      console.log(params);
+      return response
+    },
+    staleTime: 1000 * 60 * 5,
+    placeholderData: (prev) => prev,
+  })
+}
+
 export const useDoctorSchedules = (uuid: string, month: string) => {
   return useQuery({
     queryKey: ['doctor-schedules', uuid, month],
     queryFn: () => doctorService.getSchedules(uuid, month),
     staleTime: 1000 * 60 * 5,
     select: (res): ScheduleByDate => {
-      // Transform array → grouped by date
       console.log(res);
       
       return res.data.reduce((acc: ScheduleByDate, slot: DoctorScheduleSlot) => {

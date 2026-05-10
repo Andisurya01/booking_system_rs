@@ -7,14 +7,16 @@ import { format } from "date-fns"
 
 import { id } from "date-fns/locale"
 
-import { Schedule } from "../schema/registration.schema"
+import { Schedule } from "@/types/schedule"
+import { DoctorDetail } from "@/types/doctor"
 
 interface Props {
   schedule: Schedule
+  doctor: DoctorDetail
 }
 
 export function BookingSummaryCard({
-  schedule,
+  schedule, doctor
 }: Props) {
   return (
     <div className="rounded-3xl bg-[#F3FAEF] p-6">
@@ -32,7 +34,7 @@ export function BookingSummaryCard({
             </p>
 
             <h3 className="text-2xl font-semibold">
-              {schedule.doctor?.name}
+              {doctor.user.name}
             </h3>
 
             <div className="mt-4 flex items-center gap-2 text-lg">

@@ -6,12 +6,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import StatusBadge from '@/modules/myRegistrations/components/StatusBadge'
 import { RegistrationItem } from '@/types/myRegistration'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils/utils'
 
 interface Props {
     registration: RegistrationItem
-    onCancel?: (uuid: string) => void
-    isCancelling?: boolean
+    // onCancel?: (uuid: string) => void
+    // isCancelling?: boolean
 }
 
 const getInitials = (name: string) =>
@@ -25,7 +25,7 @@ const formatDateTime = (date: string, start: string, end: string) => {
 
 const CANCELLABLE: string[] = ['registered', 'rescheduled']
 
-export default function BookingCard({ registration, onCancel, isCancelling }: Props) {
+export default function BookingCard({ registration }: Props) {
     const { schedule, status, uuid, patient_type, queue_general, queue_insurance } = registration
     const doctor = schedule.doctor
     const spec = doctor.specializations[0]?.specialization?.name ?? 'Dokter Umum'
@@ -59,7 +59,6 @@ export default function BookingCard({ registration, onCancel, isCancelling }: Pr
                 </div>
             </div>
 
-            {/* Info row */}
             <div className="flex items-center gap-6 text-sm text-gray-600">
                 <div className="flex items-center gap-1.5">
                     <MapPin className="w-4 h-4 text-gray-400" />
@@ -71,12 +70,11 @@ export default function BookingCard({ registration, onCancel, isCancelling }: Pr
                 </div>
             </div>
 
-            {/* Actions */}
             <div className={cn('grid gap-2', CANCELLABLE.includes(status) ? 'grid-cols-2' : 'grid-cols-1')}>
                 <Button asChild className="bg-green-500 hover:bg-green-600 text-white rounded-xl">
-                    <Link href={`/booking-saya/${uuid}`}>Lihat detail</Link>
+                    <Link href={`/mybookings/${uuid}`}>Lihat detail</Link>
                 </Button>
-                {CANCELLABLE.includes(status) && onCancel && (
+                {/* {CANCELLABLE.includes(status) && onCancel && (
                     <Button
                         variant="outline"
                         disabled={isCancelling}
@@ -85,7 +83,7 @@ export default function BookingCard({ registration, onCancel, isCancelling }: Pr
                     >
                         Batalkan
                     </Button>
-                )}
+                )} */}
             </div>
         </div>
     )

@@ -1,45 +1,24 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { registrationService } from '@/services/myRegistration'
-import { RegistrationFilterQuery } from '@/types/myRegistration'
+import { useQuery } from '@tanstack/react-query'
+import { registrationService } from '@/services/myRegistration.service'
+import { RegistrationQueryParams } from '@/types/myRegistration'
 
-export const useDashboardSummary = () =>
+
+export const useMyRegistrations = (uuid: string, params: RegistrationQueryParams) =>
   useQuery({
-    queryKey: ['dashboard-summary'],
-    queryFn: registrationService.getDashboardSummary,
+    queryKey: ['my-registrations', uuid, params],
+    queryFn: async () => await registrationService.getMyRegistrations(uuid, params),
     staleTime: 1000 * 60 * 5,
-  })
-
-export const useUpcomingRegistrations = () =>
-  useQuery({
-    queryKey: ['upcoming-registrations'],
-    queryFn: registrationService.getUpcoming,
-    staleTime: 1000 * 60 * 5,
-  })
-
-export const useRegistrations = (params: RegistrationFilterQuery) =>
-  useQuery({
-    queryKey: ['registrations', params],
-    queryFn: () => registrationService.getAll(params),
-    staleTime: 1000 * 60 * 3,
     placeholderData: (prev) => prev,
+  })
+
+export const useRegistrationSummary = (uuid: string) =>
+  useQuery({
+    queryKey: ['summary', uuid],
+    queryFn: async () => await registrationService.getSummary(uuid)
   })
 
 export const useRegistrationDetail = (uuid: string) =>
   useQuery({
-    queryKey: ['registration', uuid],
-    queryFn: () => registrationService.getDetail(uuid),
-    staleTime: 1000 * 60 * 5,
-    enabled: !!uuid,
+    queryKey: ['registration_detail', uuid],
+    queryFn: async () => await registrationService.getRegistrationDetail(uuid)
   })
-
-export const useCancelRegistration = () => {
-  const qc = useQueryClient()
-  return useMutation({
-    mutationFn: (uuid: string) => registrationService.cancel(uuid),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['registrations'] })
-      qc.invalidateQueries({ queryKey: ['upcoming-registrations'] })
-      qc.invalidateQueries({ queryKey: ['dashboard-summary'] })
-    },
-  })
-}
